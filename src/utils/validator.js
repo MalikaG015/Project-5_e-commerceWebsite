@@ -1,109 +1,71 @@
 const mongoose = require('mongoose')
-//const moment = require('moment')
 
-const {systemConfig} = require('../configs')
-
-const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const reNumber = /\d+/
-
-const validateEmail = function(email) {
-    return re.test(email)
-};
-
+// Validation checking function
 const isValid = function(value) {
-    if(typeof value === 'undefined' || value === null) return false
-    if(typeof value === 'string' && value.trim().length === 0) return false
-    if(typeof value === 'number' && value.toString().trim().length === 0) return false
+    if (typeof value === 'undefined' || value === null) return false //it checks whether the value is null or undefined.
+    if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
     return true;
-}
-
-/*const isValidTitle = function(title) {
-    return systemConfig.titleEnumArray.indexOf(title) !== -1
-}*/
-
-const isValidRequestBody = function(requestBody) {
-    return Object.keys(requestBody).length > 0
-}
-const isValidFiles = function(files) {
-    if(files && files.length>0)
-    return true
-}
-
+};
 const isValidObjectId = function(objectId) {
     return mongoose.Types.ObjectId.isValid(objectId)
 }
+const isValidRequestBody = function(requestBody) {
+    return Object.keys(requestBody).length > 0; // it checks, is there any key is available or not in request body
+};
 
-const isValidString = function(value) {
-    return Object.prototype.toString.call(value) === "[object String]"
-}
-
-const isArray = function(arr) {
-    return Array.isArray(arr)
-}
-
-const isValidNumber = function(value) {
-    return !isNaN(Number(value)) && reNumber.test(value)
-}
-const isValidAvailableSizes = function (value) {
-    return ['S','XS','M','X','L','XXL','XL'].indexOf(value)!== -1
+const isValidTitle = function(title) {
+    return ['Mr', 'Mrs', 'Miss'].indexOf(title) !== -1
 }
 
-const isValidLength = function(value, min, max) {
-    const len = String(value).length
-    return len >= min && len <= max
+//only check empty string value.
+const validString = function(value) {
+        if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
+        return true;
+    }
+    // const validAddress = function(address) {
+    //     if (typeof address === 'undefined' || address === null) return false //it checks whether the value is null or undefined.
+    //     if (Object.keys(address).length === 0) return false
+    //     return true;
+    // }
+
+//for product
+const validInstallment = function isInteger(value) {
+    if (value < 0) return false
+    if (value % 1 == 0) return true;
 }
 
-const isInValidRange = function(value, min, max) {
-    if(!isValidNumber(value)) return false
-    return value >= min && value <= max
+const validatingInvalidObjectId = function(objectId) {
+    if (objectId.length == 24) return true //verifying the length of objectId -> it must be of 24 hex characters.
+    return false
 }
-const isValidSymbol = function(value) {
-    return value == "₹"
 
+// const verifyReviewerName = function(value) {
+//     if (typeof value === 'number') return false
+//     return true
+// }
+
+//for product
+const validQuantity = function isInteger(value) {
+    if (value < 1) return false
+    if (isNaN(Number(value))) return false
+    if (value % 1 == 0) return true
 }
-/*const isValidDate = function(value) {
-    const validFormats = [
-        "DD/MM/YYYY",
-        "MM/DD/YYYY",
-        "YYYY/MM/DD",
-        "DD-MM-YYYY",
-        "MM-DD-YYYY",
-        "YYYY-MM-DD",
-        /* "D/M/YYYY",
-        "D/MM/YYYY",
-        "DD/M/YYYY",
-        "M/D/YYYY",
-        "M/DD/YYYY",
-        "MM/D/YYYY",
-        "YYYY/M/D",
-        "YYYY/MM/D",
-        "YYYY/M/DD",
-        "D-M-YYYY",
-        "DD-M-YYYY",
-        "D-MM-YYYY",
-        "M-D-YYYY",
-        "M-DD-YYYY",
-        "MM-D-YYYY",
-        "YYYY-M-D",
-        "YYYY-M-DD",
-        "YYYY-MM-D", 
-    ]
-    return moment(value, validFormats, true).isValid()
-}*/
+
+//for order
+const isValidStatus = function(status) {
+    return ['pending', 'completed', 'cancelled'].indexOf(status) !== -1
+}
 
 module.exports = {
-    validateEmail,
-    emailRegex: re,
     isValid,
-    isValidFiles,
     isValidRequestBody,
+    isValidTitle,
     isValidObjectId,
-    isValidString,
-    isValidAvailableSizes,
-    isValidNumber,
-    isValidLength,
-    isInValidRange,
-    isValidSymbol,
-    isArray
-    //isValidDate,
-};
+    validString,
+    //validAddress,
+    validInstallment,
+    validatingInvalidObjectId,
+    //verifyReviewerName,
+    validQuantity,
+    isValidStatus
+}
