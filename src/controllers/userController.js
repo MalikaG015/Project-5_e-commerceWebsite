@@ -76,9 +76,10 @@ const userCreation = async(req, res) => {
             return res.status(400).send({ status: false, message: "Address is required" })
         }
         //shipping address validation
-        if (address.shipping) {
+        
             if (address.shipping.street) {
-                if (!validator.isValidRequestBody(address.shipping.street)) {
+                console.log(address.shipping.street)
+                if (!validator.isValid(address.shipping.street)) {
                     return res.status(400).send({
                         status: false,
                         message: "Shipping address's Street Required"
@@ -89,7 +90,7 @@ const userCreation = async(req, res) => {
             }
 
             if (address.shipping.city) {
-                if (!validator.isValidRequestBody(address.shipping.city)) {
+                if (!validator.isValid(address.shipping.city)) {
                     return res.status(400).send({
                         status: false,
                         message: "Shipping address city Required"
@@ -99,7 +100,7 @@ const userCreation = async(req, res) => {
                 return res.status(400).send({ status: false, message: "Invalid request parameters. Shipping address's city cannot be empty" })
             }
             if (address.shipping.pincode) {
-                if (!validator.isValidRequestBody(address.shipping.pincode)) {
+                if (!validator.isValid(address.shipping.pincode)) {
                     return res.status(400).send({
                         status: false,
                         message: "Shipping address's pincode Required"
@@ -108,13 +109,11 @@ const userCreation = async(req, res) => {
             } else {
                 return res.status(400).send({ status: false, message: "Invalid request parameters. Shipping address's pincode cannot be empty" })
             }
-        } else {
-            return res.status(400).send({ status: false, message: "Shipping address cannot be empty." })
-        }
+        
         // Billing Address validation
-        if (address.billing) {
+        
             if (address.billing.street) {
-                if (!validator.isValidRequestBody(address.billing.street)) {
+                if (!validator.isValid(address.billing.street)) {
                     return res.status(400).send({
                         status: false,
                         message: "Billing address's Street Required"
@@ -124,7 +123,7 @@ const userCreation = async(req, res) => {
                 return res.status(400).send({ status: false, message: " Invalid request parameters. Billing address's street cannot be empty" })
             }
             if (address.billing.city) {
-                if (!validator.isValidRequestBody(address.billing.city)) {
+                if (!validator.isValid(address.billing.city)) {
                     return res.status(400).send({
                         status: false,
                         message: "Billing address's city Required"
@@ -134,7 +133,7 @@ const userCreation = async(req, res) => {
                 return res.status(400).send({ status: false, message: "Invalid request parameters. Billing address's city cannot be empty" })
             }
             if (address.billing.pincode) {
-                if (!validator.isValidRequestBody(address.billing.pincode)) {
+                if (!validator.isValid(address.billing.pincode)) {
                     return res.status(400).send({
                         status: false,
                         message: "Billing address's pincode Required "
@@ -143,9 +142,7 @@ const userCreation = async(req, res) => {
             } else {
                 return res.status(400).send({ status: false, message: "Invalid request parameters. Billing address's pincode cannot be empty" })
             }
-        } else {
-            return res.status(400).send({ status: false, message: "Billing address cannot be empty." })
-        }
+        
         //validation ends
 
         profileImage = await config.uploadFile(files[0]); //uploading image to AWS
